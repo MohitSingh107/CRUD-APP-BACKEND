@@ -98,6 +98,20 @@ public class CourseServiceImpl implements CourseService {
 			TypedQuery<Course> query=entityManager.createQuery(cq);
 			
 			return query.getResultList();
+	}
+
+	@Override
+	public List<Course> sortByName(String title) {
+
+		   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		    CriteriaQuery<Course> cq = cb.createQuery(Course.class);
+		    
+		    Root<Course> course = cq.from(Course.class);
+		   cq.orderBy(cb.asc(course.get("title")));
+		
+		   CriteriaQuery<Course> select = cq.select(course);  
+	          TypedQuery<Course> q = entityManager.createQuery(select);  
+	          return q.getResultList();
 	}		
 	
 }

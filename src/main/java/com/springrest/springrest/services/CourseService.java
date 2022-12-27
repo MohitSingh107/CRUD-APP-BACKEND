@@ -24,5 +24,7 @@ public interface CourseService {
 	
 	List<Course>ListAllCourses();
 
+	List<Course> sortByName(String title);
+
 	
 }

@@ -41,7 +41,6 @@ public class MyController {
 	    binder.setValidator(validator);
 	    }
 
-
 	
 // "__"	
 @GetMapping("/home")
@@ -61,6 +60,13 @@ return this.courseService.ListAllCourses(); //USING CRITERIA QUERY ListAllCourse
 @GetMapping("/courses/{courseId}")
 public Course getCourse(@PathVariable String courseId) {
 return this.courseService.getCourses(Long.parseLong(courseId));
+}
+
+
+//SORTING USING TITLE
+@GetMapping("/courses/sort/{title}")
+public List<Course> sortByName(@PathVariable("title") String title) {
+return this.courseService.sortByName(title); 
 }
 
 
