@@ -3,11 +3,18 @@ package com.springrest.springrest.model;
 
 public class Info {
 
-	private int pageSize;
-	private int limit;
-	private  String shortType;
+	private int pageSize=1;
+	private int limit=3;
+	private String shortType;
 	private String shortField;
+	private String searchitem;
 	
+	public String getSearchitem() {
+		return searchitem;
+	}
+	public void setSearchitem(String searchitem) {
+		this.searchitem = searchitem;
+	}
 	public int getPageSize() {
 		return pageSize;
 	}
@@ -32,9 +39,5 @@ public class Info {
 	public void setShortField(String shortField) {
 		this.shortField = shortField;
 	}
-	public Object getSortType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	 
+	
 }

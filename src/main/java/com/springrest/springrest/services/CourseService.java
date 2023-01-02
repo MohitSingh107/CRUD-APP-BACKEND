@@ -3,6 +3,8 @@ package com.springrest.springrest.services;
 import java.util.List;
 
 import com.springrest.springrest.model.Course;
+import com.springrest.springrest.model.Info;
+import com.springrest.springrest.model.Page;
 
 public interface CourseService {
 
@@ -25,6 +27,8 @@ public interface CourseService {
 	List<Course>ListAllCourses();
 
 	List<Course> sortByName(String title);
+	
+	Page pagination(Info info);
 
 	
 }

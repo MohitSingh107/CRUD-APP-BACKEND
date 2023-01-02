@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.springrest.springrest.model.Course;
+import com.springrest.springrest.model.Info;
+import com.springrest.springrest.model.Page;
 import com.springrest.springrest.services.CourseService;
 import com.springrest.springrest.validator.CourseValidator;
 
@@ -83,6 +85,11 @@ public List<Course> findByCourseId(@PathVariable Long sno){
 return this.courseService.findByCourseId(sno); 
 }
 
+//ASASASASASASASASASASASASASASASASASASA
+@PostMapping("/courses/pagination")
+public Page pagination(@RequestBody Info info ){
+	return this.courseService.pagination(info);
+}
 
 //ADD COURSE BUTTON (ADD NEW COURSE)
 @PostMapping(path="/courses", produces = "application/json")
