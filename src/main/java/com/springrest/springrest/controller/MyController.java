@@ -65,27 +65,7 @@ return this.courseService.getCourses(Long.parseLong(courseId));
 }
 
 
-//SORTING USING TITLE
-@GetMapping("/courses/sort/{title}")
-public List<Course> sortByName(@PathVariable("title") String title) {
-return this.courseService.sortByName(title); 
-}
-
-
-//SEARCH-BUTTON-1 (READ A SPECIFIC COURSE FROM INPUTED TITLE)
-@GetMapping("/courses/search-title/{title}")
-public List<Course> findByCourseName(@PathVariable("title") String title) {
-return this.courseService.findByCourseName(title); 
-}
-
-
-//SEARCH-BUTTON-2 (READ A SPECIFIC COURSE FROM INPUTED ID)
-@GetMapping("/courses/search-id/{sno}")
-public List<Course> findByCourseId(@PathVariable Long sno){	
-return this.courseService.findByCourseId(sno); 
-}
-
-//ASASASASASASASASASASASASASASASASASASA
+//SORTING,SEARCHING,PAGINATION
 @PostMapping("/courses/pagination")
 public Page pagination(@RequestBody Info info ){
 	return this.courseService.pagination(info);

@@ -51,42 +51,6 @@ public class CourseServiceImpl implements CourseService {
 	@PersistenceContext
 	 private EntityManager entityManager;
 
-	
-	@Override
-	public List<Course> findByCourseName(String title) {
-		
-		   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		    CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		    
-		    Root<Course> course = cq.from(Course.class);
-		    Predicate CourseNamePredicate=cb.equal(course.get("title"),title);
-		    
-		    cq.where(CourseNamePredicate);
-		    TypedQuery<Course> query=entityManager.createQuery(cq);
-		
-		
-		
-		return query.getResultList();
-	}
-
-
-	@Override
-	public List<Course> findByCourseId(Long sno) {
-
-		   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		    CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		    
-		    Root<Course> course = cq.from(Course.class);
-		    Predicate CoursesnoPredicate=cb.equal(course.get("sno"),sno);
-		    
-		    cq.where(CoursesnoPredicate);
-		TypedQuery<Course> query=entityManager.createQuery(cq);
-		
-		return query.getResultList();
-	
-	}
-
-
 	@Override
 	public List<Course> ListAllCourses() {
 
@@ -100,48 +64,43 @@ public class CourseServiceImpl implements CourseService {
 			return query.getResultList();
 	}
 
-	@Override
-	public List<Course> sortByName(String title) {
-
-		   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		    CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		    
-		    Root<Course> course = cq.from(Course.class);
-		   cq.orderBy(cb.asc(course.get("title")));
-		
-		   CriteriaQuery<Course> select = cq.select(course);  
-	          TypedQuery<Course> q = entityManager.createQuery(select);  
-	          return q.getResultList();
-	}
-
-
 
 	@Override
 	public Page pagination(Info info) {
-
+		Long count = null;
+		int pageNumber = 0;
+		boolean check=false;
 		   CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		    CriteriaQuery<Course> cq = cb.createQuery(Course.class);
 		    Root<Course> course = cq.from(Course.class);
 		    CriteriaQuery<Course> select = cq.select(course);
-		    
-		    CriteriaQuery<Long> cq1 = cb.createQuery(Long.class);
-		    cq1.select(cb.count(cq1.from(Course.class)));
-		    entityManager.createQuery(cq1);
-		    Long count = entityManager.createQuery(cq1).getSingleResult();
-		    
+   	
 		    if(info.getSearchitem()!=null&&!info.getSearchitem().isEmpty()) {
-		    	Predicate predicate1=cb.like(course.get("title"),"%"+ info.getSearchitem()+"%"); 			
-		    	cq.where(predicate1);
-		    }
+		    	Predicate predicate1=cb.like(course.get("title"),"%"+ info.getSearchitem()+"%");
+//		    	Predicate predicate2=cb.like(course.get("technology"),"%"+ info.getSearchitem()+"%");
+		    	Predicate resfinal=cb.or(predicate1);
+		    	cq.where(resfinal);
+		    	
+		    	   CriteriaBuilder cb1 = entityManager.getCriteriaBuilder();
+		    	CriteriaQuery<Long> cq1 = cb1.createQuery(Long.class);
+		    	cq1.select(cb1.count(cq1.from(Course.class)));
+		    	entityManager.createQuery(cq1);
+		    	cq1.where(predicate1);
+		    	 count = entityManager.createQuery(cq1).getSingleResult();
+		    	 int pageSize = info.getLimit();
+			    
+		    	 if(count!=pageSize) {	
+		    	 pageNumber = (int) ((count / pageSize) + 1);
+			    	 	System.out.println(count);
+			    	 	 System.out.println(pageNumber);
+			    }else {
+			    	 pageNumber = (int) ((count / pageSize));
+			    	 	System.out.println(count);
+			    	 	 System.out.println(pageNumber);
+			    	}
+			    	 	 check=true;
 		    
-		    Query queryTotal = entityManager.createQuery
-		    	    ("Select count(f.id) from Course f");
-		    	long countResult = (long)queryTotal.getSingleResult();
-		    	int pageSize = info.getLimit();
-		    	int pageNumber = (int) ((countResult / pageSize) + 1);
-		    
-		    
-		    
+		  }
 		    	Order order;
 		        if (info.getShortField() != null && !info.getShortField().isEmpty()) {
 		            if (info.getShortType().equals("desc") ) {
@@ -153,12 +112,26 @@ public class CourseServiceImpl implements CourseService {
 		            order = cb.asc(course.get("sno"));
 		        }
 		        cq.orderBy(order);
+		        
 		        TypedQuery<Course> typedQuery = entityManager.createQuery(select);
 		        typedQuery.setFirstResult((info.getPageSize()-1)*info.getLimit());
 		        typedQuery.setMaxResults(info.getLimit());
 		        List<?>result = typedQuery.getResultList();
-		        
-		        
+		       
+		       if(check==false) {
+		        Query queryTotal = entityManager.createQuery
+			    	    ("Select count(f.id) from Course f");
+			    	 count = (long)queryTotal.getSingleResult();
+			    	int pageSize = info.getLimit();
+			    	if(count==pageSize) {
+			    		 pageNumber = (int) ((count / pageSize));
+			    	}else {
+			    	 pageNumber = (int) ((count / pageSize) + 1);
+			    	 System.out.println(pageNumber);
+			    	} 
+			    	 
+		       }
+		       
 		        
 		        
 //  List<Course> result = entityManager.createQuery(cq).setFirstResult((info.getPageSize()-1)*info.getLimit()).setMaxResults(info.getLimit()).getResultList();
@@ -168,33 +141,3 @@ public class CourseServiceImpl implements CourseService {
 
 	}
  
-//CriteriaBuilder builder = em.getCriteriaBuilder();
-//CriteriaQuery<Brand> cQuery = builder.createQuery(Brand.class);
-//Root<Brand> from = cQuery.from(Brand.class);
-//CriteriaQuery<Brand> select = cQuery.select(from);
-//.
-//.
-//Created many predicates and added to **Predicate[] pArray**
-//.
-//.
-//CriteriaQuery<Long> cq = builder.createQuery(Long.class);
-//cq.select(builder.count(cq.from(Brand.class)));
-// Following line if commented causes [org.hibernate.hql.ast.QuerySyntaxException: Invalid path: 'generatedAlias1.enabled' [select count(generatedAlias0) from xxx.yyy.zzz.Brand as generatedAlias0 where ( generatedAlias1.enabled=:param0 ) and ( lower(generatedAlias1.description) like :param1 )]]
-//em.createQuery(cq);
-//cq.where(pArray);
-//Long count = em.createQuery(cq).getSingleResult();
-//.
-//.
-//select.where(pArray);
-//.
-//.
-// Added orderBy clause
-//TypedQuery typedQuery = em.createQuery(select);
-//typedQuery.setFirstResult(startIndex);
-//typedQuery.setMaxResults(pageSize);
-//List resultList = typedQuery.getResultList()
-//
-//
-
-
-

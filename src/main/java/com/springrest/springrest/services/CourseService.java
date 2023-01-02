@@ -20,14 +20,8 @@ public interface CourseService {
 	
 //CRITERIA QUERY 
 	
-	List<Course> findByCourseName(String title);
-	
-	List<Course>findByCourseId(Long sno);
-	
 	List<Course>ListAllCourses();
 
-	List<Course> sortByName(String title);
-	
 	Page pagination(Info info);
 
 	
