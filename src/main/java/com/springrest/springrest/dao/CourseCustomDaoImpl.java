@@ -1,4 +1,4 @@
-package com.springrest.springrest.services;
+package com.springrest.springrest.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,13 +11,13 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.springrest.springrest.dao.CourseDao;
 import com.springrest.springrest.model.Course;
 import com.springrest.springrest.model.Info;
 import com.springrest.springrest.model.Page;
+import com.springrest.springrest.services.CourseService;
 
 @Service
-public class CourseServiceImpl implements CourseService {
+public class CourseCustomDaoImpl implements CourseService {
 	@Autowired
 	private CourseDao coursedao;
 	@Override
@@ -77,7 +77,7 @@ public class CourseServiceImpl implements CourseService {
    	
 		    if(info.getSearchitem()!=null&&!info.getSearchitem().isEmpty()) {
 		    	Predicate predicate1=cb.like(course.get("title"),"%"+ info.getSearchitem()+"%");
-//		    	Predicate predicate2=cb.like(course.get("technology"),"%"+ info.getSearchitem()+"%");
+		    	//Predicate predicate2=cb.like(course.get("technology"),"%"+ info.getSearchitem()+"%");
 		    	Predicate resfinal=cb.or(predicate1);
 		    	cq.where(resfinal);
 		    	
