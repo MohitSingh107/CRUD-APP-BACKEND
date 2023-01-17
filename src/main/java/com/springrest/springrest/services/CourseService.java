@@ -24,5 +24,4 @@ public interface CourseService {
 
 	Page pagination(Info info);
 
-	
 }
