@@ -3,11 +3,7 @@ package com.springrest.springrest.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class Course {  
@@ -16,10 +12,10 @@ public class Course {
 	private String title;
 	private String technology;
 	private float  price;
-	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	private Company provider;
 	
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	private List<Website> weblist=new ArrayList<>();
 
 	Course(){

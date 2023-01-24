@@ -134,13 +134,13 @@ return this.courseService.getCourses(Long.parseLong(courseId));
 }
 
 //Creating and Registering User/Role into DataBase
-@PostMapping("/Signup")
+@PostMapping("/courses/Signup")
 public ResponseEntity<?> addUserandRole(@RequestBody User user) {
 	try {
 		this.userService.addUserRole(user);
-		return new ResponseEntity<>("Created and Saved", HttpStatus.CREATED);
+		return new ResponseEntity<>( HttpStatus.CREATED);
 	} catch (Exception e) {
-		return new ResponseEntity<>("Try Again",HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	}
 
@@ -151,7 +151,8 @@ public Page pagination(@RequestBody Info info ){
 }
 
 //ADD COURSE BUTTON (ADD NEW COURSE)
-@PostMapping(path="/courses", produces = "application/json")
+@PreAuthorize("hasRole('ADMIN')")
+@PostMapping(path="/courses/add", produces = "application/json")
 public ResponseEntity<?> addCourse(@Valid @RequestBody Course course,Errors errors) {
 	validator.validate(course, errors); //USING CUSTOM VALIDATION
 	if (errors.hasErrors()){
@@ -162,7 +163,8 @@ public ResponseEntity<?> addCourse(@Valid @RequestBody Course course,Errors erro
 
 
 //UPDATE BUTTON (UPDATE SPECIFIC COURSE)
-@PutMapping("/courses")
+@PreAuthorize("hasRole('ADMIN')")
+@PutMapping("/courses/update")
 public ResponseEntity<?> updateCourse(@RequestBody Course course,Errors errors) {
 	validator.putvalidate(course, errors); //USING CUSTOM VALIDATION
 	if (errors.hasErrors()) {
@@ -174,13 +176,13 @@ public ResponseEntity<?> updateCourse(@RequestBody Course course,Errors errors) 
 
 //DELETE BUTTON (DELETE SPECIFIC COURSE)
 @PreAuthorize("hasRole('ADMIN')")
-@DeleteMapping("/courses/{courseId}")
+@DeleteMapping("/courses/del/{courseId}")
 public ResponseEntity<?> deleteCourse(@PathVariable String courseId){
 	try {
 	this.courseService.deleteCourse(Long.parseLong(courseId));
-	return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+	return new ResponseEntity<>(HttpStatus.OK);
   } catch (Exception e) {
-	return new ResponseEntity<>("Caught with some Error",HttpStatus.INTERNAL_SERVER_ERROR);
+	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
  }

@@ -1,5 +1,6 @@
 package com.springrest.springrest.dao;
 
+import com.springrest.springrest.model.Roles;
 import com.springrest.springrest.model.User;
 import com.springrest.springrest.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -29,7 +30,11 @@ public class UserCustomDaoImpl implements UserService {
     public User addUserRole(User user) {
        User user2=modelMapper.map(user,User.class);
        user2.setPassword(passwordEncoder.encode(user2.getPassword()));
-        User newUser= userDao.save(user2);
+
+           Roles roles= this.roleDao.findById(402).get();
+           user2.getRole().add(roles);
+
+        User newUser = userDao.save(user2);
         return modelMapper.map(newUser,User.class);
     }
 
